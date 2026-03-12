@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentCar — მანქანის დეტალები</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="car-detail..css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Rent<span>Car</span></a>
+  <div class="nav-links" id="nav-links"></div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="index.html">მთავარი</a><span>/</span>
+  <a href="filter.html">ფილტრი</a><span>/</span>
+  <span class="cur" id="bc-name">იტვირთება...</span>
+</div>
+
+<!-- LOADING SKELETON -->
+<div class="detail-wrap" id="loading-wrap">
+  <div>
+    <div class="skel" style="height:400px;margin-bottom:12px;border-radius:16px;"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <div class="skel" style="height:96px;border-radius:10px;"></div>
+      <div class="skel" style="height:96px;border-radius:10px;"></div>
+      <div class="skel" style="height:96px;border-radius:10px;"></div>
+    </div>
+    <div class="skel" style="height:44px;width:60%;margin-top:26px;"></div>
+    <div class="skel" style="height:18px;width:35%;margin-top:10px;"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px;">
+      <div class="skel" style="height:72px;"></div>
+      <div class="skel" style="height:72px;"></div>
+      <div class="skel" style="height:72px;"></div>
+    </div>
+  </div>
+  <div class="skel" style="height:500px;border-radius:20px;"></div>
+</div>
+
+<!-- NOT FOUND -->
+<div class="nf" id="nf" style="display:none">
+  <div style="font-size:3rem;margin-bottom:14px;">🔍</div>
+  <h2>მანქანა ვერ მოიძებნა</h2>
+  <p>შეიძლება განცხადება წაიშალა ან URL არასწორია</p>
+  <a href="filter.html" style="background:var(--gold);color:#0e0f11;padding:12px 28px;border-radius:50px;font-weight:700;font-size:.9rem;display:inline-block;margin-top:8px;">ყველა მანქანა →</a>
+</div>
+
+<!-- DETAIL CONTENT -->
+<div class="detail-wrap" id="detail-wrap" style="display:none">
+
+  <!-- ══ LEFT: PHOTOS ══ -->
+  <div>
+    <!-- Main photo -->
+    <div class="photo-main" id="photo-main">
+      <!-- 
+        📸 3 FOTOĞRAF BURAYA:
+        Aktif olan (galIdx'e göre) gösterilir, JS halleder.
+        Aşağıda galImages dizisinde tanımlı.
+      -->
+      <img id="main-img" src="audi_2.jpeg" alt="Araç fotoğrafı">
+      <button class="ph-arrow l" onclick="galNav(-1)">‹</button>
+      <button class="ph-arrow r" onclick="galNav(1)">›</button>
+    </div>
+
+    <!-- Thumbnails -->
+    <div class="photo-thumbs">
+      <div class="thumb active" onclick="galTo(0)">
+        <img src="audi_2.jpeg" alt="Fotoğraf 1">
+      </div>
+      <div class="thumb" onclick="galTo(1)">
+        <img src="car.png" alt="Fotoğraf 2">
+      </div>
+      <div class="thumb" onclick="galTo(2)">
+        <img src="car2.png" alt="Fotoğraf 3">
+      </div>
+    </div>
+
+    <!-- Car title -->
+    <div class="car-headline">
+      <h1 id="car-title">—</h1>
+      <div class="car-loc">📍 <strong id="car-city">—</strong></div>
+    </div>
+
+    <!-- Info boxes -->
+    <div class="info-grid" id="info-grid"></div>
+  </div>
+
+  <!-- ══ RIGHT: DETAIL CARD ══ -->
+  <div>
+    <div class="detail-card">
+
+      <!-- Daily price -->
+      <div class="dc-price">
+        <span class="big" id="dc-price">—</span>
+        <span class="per">₾ / დღე</span>
+      </div>
+
+      <!-- SLIDER -->
+      <div class="slider-header">
+        <span class="slider-lbl">გაქირავების დღეები</span>
+        <span class="slider-val"><span id="sl-days">1</span> დღე</span>
+      </div>
+      <input type="range" id="day-slider" min="1" max="30" value="1" oninput="onSlider(this.value)">
+
+
+      <!-- TOTAL COST -->
+      <div class="cost-box">
+        <div class="cost-left">
+          <div class="cost-title">სულ გადასახდელი</div>
+        </div>
+        <div class="cost-total" id="cost-total">— ₾</div>
+      </div>
+
+      <!-- BUY BUTTON -->
+      <button class="btn-buy" id="btn-buy" onclick="doRent()">
+        🚗 ყიდვა
+      </button>
+
+      <!-- LOGIN HINT (not logged in) -->
+      <div class="login-hint" id="login-hint">
+        გაქირავებისთვის <a href="login.html">გაიარეთ ავტორიზაცია</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-logo">RentCar</div>
+  Georgia &copy; 2025
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script src="car-detail..js"></script>
+</body>
+</html>

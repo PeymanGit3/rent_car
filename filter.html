@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentCar — ფილტრაცია</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="filter.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Rent<span>Car</span></a>
+  <div class="nav-links" id="nav-links"></div>
+</nav>
+
+<div class="page-layout">
+  <!-- FILTER PANEL -->
+  <aside class="filter-panel">
+    <div class="filter-title">
+      ფილტრი
+      <button class="filter-clear" onclick="clearFilters()">გასუფთავება</button>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">📍 ქალაქი</label>
+      <select class="filter-select" id="f-city">
+        <option value="">ყველა ქალაქი</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">📅 გამოშვების წელი</label>
+      <div class="filter-range-row">
+        <input type="number" class="filter-input" id="f-year-from" placeholder="1990" min="1950" max="2025">
+        <span class="filter-range-sep">—</span>
+        <input type="number" class="filter-input" id="f-year-to" placeholder="2025" min="1950" max="2025">
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">👥 ტევადობა (კაცი)</label>
+      <input type="number" class="filter-input" id="f-capacity" placeholder="მაგ: 5" min="1" max="20">
+    </div>
+
+    <button class="btn-apply" onclick="applyFilters()">🔍 ძიება</button>
+  </aside>
+
+  <!-- RESULTS -->
+  <div>
+    <div class="results-header">
+      <h1 class="results-title">მანქანები</h1>
+      <span class="results-count">ნაპოვნია: <span class="result-count-num" id="res-count">—</span></span>
+    </div>
+    <div class="car-grid" id="results-grid">
+      <div class="skeleton-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line w75"></div><div class="skel skel-line w55"></div><div class="skel skel-line w35"></div></div></div>
+      <div class="skeleton-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line w75"></div><div class="skel skel-line w55"></div><div class="skel skel-line w35"></div></div></div>
+      <div class="skeleton-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line w75"></div><div class="skel skel-line w55"></div><div class="skel skel-line w35"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script src="filter.js"></script>
+</body>
+</html>

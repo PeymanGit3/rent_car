@@ -1,0 +1,310 @@
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --bg:#0a0a0f;
+  --surface:#13131a;
+  --card:#1a1a24;
+  --border:rgba(255,255,255,0.07);
+
+  --gold:yellow;
+  --gold2:#f0c96a;
+
+  --white:#f0ede8;
+  --muted:#7a7a8c;
+
+  --red:#e63946;
+  --green:#2ec47a;
+
+  --radius:14px;
+
+  --font-display:'Cormorant Garamond',serif;
+  --font-body:'Outfit',sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:var(--font-body);
+  min-height:100vh;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  cursor:pointer;
+  font-family:var(--font-body);
+}
+
+::-webkit-scrollbar{
+  width:6px;
+}
+
+::-webkit-scrollbar-track{
+  background:var(--bg);
+}
+
+::-webkit-scrollbar-thumb{
+  background:var(--border);
+  border-radius:3px;
+}
+
+
+/* HEADER */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:500;
+
+  background:rgba(10,10,15,0.85);
+  backdrop-filter:blur(18px);
+
+  border-bottom:1px solid var(--border);
+}
+
+.nav-inner{
+  max-width:1280px;
+  margin:0 auto;
+  padding:0 28px;
+
+  height:68px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  font-family:var(--font-display);
+  font-size:1.75rem;
+  font-weight:700;
+  color:var(--gold);
+}
+
+.logo em{
+  color:var(--white);
+  font-style:normal;
+}
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.nav-btn{
+  background:none;
+  border:1px solid var(--border);
+  color:var(--muted);
+
+  font-size:.875rem;
+  font-weight:500;
+
+  padding:8px 16px;
+
+  border-radius:50px;
+
+  transition:all .2s;
+
+  text-decoration:none;
+  display:inline-block;
+}
+
+.nav-btn:hover{
+  color:var(--white);
+  border-color:var(--white);
+}
+
+
+/* PAGE */
+
+.page{
+  max-width:740px;
+  margin:0 auto;
+  padding:48px 28px 80px;
+}
+
+.page-title{
+  font-family:var(--font-display);
+  font-size:2.5rem;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.page-sub{
+  color:var(--muted);
+  font-size:.9rem;
+  margin-bottom:40px;
+  line-height:1.6;
+}
+
+
+/* FORM CARD */
+
+.form-card{
+  background:var(--card);
+  border:1px solid var(--border);
+
+  border-radius:20px;
+
+  padding:36px;
+
+  position:relative;
+  overflow:hidden;
+}
+
+.form-card::before{
+  content:'';
+  position:absolute;
+
+  top:-80px;
+  right:-80px;
+
+  width:240px;
+  height:240px;
+
+  border-radius:50%;
+
+  background:radial-gradient(
+    circle,
+    rgba(212,168,67,.06) 0%,
+    transparent 70%
+  );
+
+  pointer-events:none;
+}
+
+
+/* DIVIDERS */
+
+.sdiv{
+  display:flex;
+  align-items:center;
+  gap:14px;
+
+  margin:28px 0 22px;
+}
+
+.sdiv span{
+  font-family:var(--font-display);
+  font-size:1rem;
+  font-weight:600;
+
+  color:var(--gold);
+
+  white-space:nowrap;
+}
+
+.sdiv hr{
+  flex:1;
+  border:none;
+  border-top:1px solid var(--border);
+}
+
+
+/* GRID */
+
+.fgrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+@media(max-width:600px){
+
+  .fgrid{
+    grid-template-columns:1fr;
+  }
+
+  .form-card{
+    padding:22px;
+  }
+
+}
+
+
+/* FIELDS */
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.field label{
+  font-size:.72rem;
+  font-weight:600;
+
+  color:var(--muted);
+
+  text-transform:uppercase;
+  letter-spacing:.5px;
+
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.req{
+  color:var(--gold);
+  font-size:1rem;
+  line-height:1;
+}
+
+.field input,
+.field select{
+  background:var(--surface);
+  border:1px solid var(--border);
+
+  border-radius:11px;
+
+  padding:12px 14px;
+
+  color:var(--white);
+
+  font-family:var(--font-body);
+  font-size:.9rem;
+
+  outline:none;
+
+  transition:border-color .2s, box-shadow .2s;
+
+  width:100%;
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(212,168,67,.07);
+}
+
+.field input::placeholder{
+  color:var(--muted);
+}
+
+.field select{
+  appearance:none;
+
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a7a8c' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+}
+
+.field select option{
+  background:var(--card);
+  color:var(--white);
+}

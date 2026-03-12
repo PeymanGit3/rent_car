@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentCar — პროფილი</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="profile..css">
+
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Rent<em>Car</em></a>
+    <div class="nav-right">
+      <a href="index.html" class="nav-btn">← მთავარი</a>
+      <a href="add-car.html" class="nav-btn nav-btn-gold">➕ დამატება</a>
+      <button class="nav-btn nav-btn-red" onclick="logout()">გამოსვლა</button>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- NOT LOGGED IN -->
+  <div class="not-logged" id="not-logged" style="display:none">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <h2>ავტორიზაცია საჭიროა</h2>
+    <p>პროფილის სანახავად გთხოვთ გაიაროთ ავტორიზაცია</p>
+    <button class="btn-gold-big" onclick="window.location.href='login.html'">შესვლა / რეგისტრაცია</button>
+  </div>
+
+  <!-- PROFILE CONTENT -->
+  <div id="profile-content" style="display:none">
+
+    <!-- HERO -->
+    <div class="profile-hero">
+      <div class="avatar-big" id="avatar-init">?</div>
+      <div class="profile-info">
+        <div class="profile-name" id="pname">—</div>
+        <div class="profile-phone" id="pphone">—</div>
+      </div>
+      <div class="profile-stats">
+        <div class="stat">
+          <div class="stat-num" id="stat-rented">0</div>
+          <div class="stat-lbl">ნაქირავები</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="stat-liked">0</div>
+          <div class="stat-lbl">მოწონებული</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="stat-posted">0</div>
+          <div class="stat-lbl">განთავსებული</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="profile-tabs">
+      <button class="ptab active" onclick="showTab('rentals')">🚗 ნაქირავები</button>
+      <button class="ptab" onclick="showTab('favorites')">❤️ მოწონებული</button>
+      <button class="ptab" onclick="showTab('posted')">📋 ჩემი განცხადებები</button>
+    </div>
+
+    <!-- TAB: RENTALS -->
+    <div id="tab-rentals">
+      <div class="sec-title">
+        ნაქირავები მანქანები
+      </div>
+      <div class="rental-list" id="rental-list">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+    </div>
+
+    <!-- TAB: FAVORITES -->
+    <div id="tab-favorites" style="display:none">
+      <div class="sec-title">
+        მოწონებული მანქანები
+      </div>
+      <div class="cars-grid" id="fav-grid"></div>
+    </div>
+
+    <!-- TAB: POSTED -->
+    <div id="tab-posted" style="display:none">
+      <div class="sec-title">
+        ჩემი განცხადებები
+      </div>
+      <div class="cars-grid" id="posted-grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer><span>RentCar</span> Georgia &copy; 2025</footer>
+<div class="toast" id="toast"></div>
+
+
+<script src="profile.js"></script>
+</body>
+</html>

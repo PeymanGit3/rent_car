@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentCar — შესვლა / რეგისტრაცია</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="login.css">
+
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Rent<span>Car</span></a>
+  <a href="index.html" class="nav-btn">← მთავარი</a>
+</nav>
+
+<div class="page-wrap">
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">შესვლა</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">რეგისტრაცია</button>
+    </div>
+
+    <div class="auth-form">
+      <!-- LOGIN -->
+      <div class="auth-form-inner active" id="form-login">
+        <div class="form-logo">
+          <div class="form-logo-text">Rent<span>Car</span></div>
+          <div class="form-logo-sub">ანგარიშში შესვლა</div>
+        </div>
+        <div class="form-group">
+          <label>ტელეფონის ნომერი</label>
+          <input type="tel" class="form-input" id="l-phone" placeholder="+995 5XX XXX XXX">
+        </div>
+        <div class="form-group">
+          <label>პაროლი</label>
+          <input type="password" class="form-input" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <div class="err-msg" id="l-err"></div>
+        <button class="btn-submit" id="l-btn" onclick="doLogin()">შესვლა</button>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="auth-form-inner" id="form-register">
+        <div class="form-logo">
+          <div class="form-logo-text">Rent<span>Car</span></div>
+          <div class="form-logo-sub">ახალი ანგარიშის შექმნა</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>სახელი</label>
+            <input type="text" class="form-input" id="r-fname" placeholder="გიორგი">
+          </div>
+          <div class="form-group">
+            <label>გვარი</label>
+            <input type="text" class="form-input" id="r-lname" placeholder="მამისაშვილი">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>ტელეფონის ნომერი</label>
+          <input type="tel" class="form-input" id="r-phone" placeholder="+995 5XX XXX XXX">
+        </div>
+        <div class="form-group">
+          <label>ელ-ფოსტა</label>
+          <input type="email" class="form-input" id="r-email" placeholder="example@mail.com">
+        </div>
+        <div class="form-group">
+          <label>პაროლი</label>
+          <input type="password" class="form-input" id="r-pass" placeholder="••••••••">
+        </div>
+        <div class="err-msg" id="r-err"></div>
+        <button class="btn-submit" id="r-btn" onclick="doRegister()">რეგისტრაცია</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+
+<script src="login.js"></script>
+</body>
+</html>
