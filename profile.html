@@ -4,22 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RentCar — პროფილი</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="profile..css">
+<link rel="stylesheet" href="index..css">
 
 </head>
 <body>
 
-<header>
-  <div class="nav-inner">
-    <a href="index.html" class="logo">Rent<em>Car</em></a>
-    <div class="nav-right">
-      <a href="index.html" class="nav-btn">← მთავარი</a>
-      <a href="add-car.html" class="nav-btn nav-btn-gold">➕ დამატება</a>
-      <button class="nav-btn nav-btn-red" onclick="logout()">გამოსვლა</button>
-    </div>
-  </div>
-</header>
+  
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Rent<span>Car</span></a>
+  <div class="nav-links" id="nav-links"></div>
+</nav>
 
 <div class="page">
 
@@ -58,18 +61,18 @@
     </div>
 
     <!-- TABS -->
-    <div class="profile-tabs">
-      <button class="ptab active" onclick="showTab('rentals')">🚗 ნაქირავები</button>
-      <button class="ptab" onclick="showTab('favorites')">❤️ მოწონებული</button>
-      <button class="ptab" onclick="showTab('posted')">📋 ჩემი განცხადებები</button>
-    </div>
+<div class="profile-tabs-wrap">
+  <div class="car-indicator" id="car-indicator">🏎️</div>
+  <div class="profile-tabs" id="profile-tabs">
+    <button class="ptab active" onclick="showTab('rentals')">ნაქირავები</button>
+    <button class="ptab" onclick="showTab('favorites')">მოწონებული</button>
+    <button class="ptab" onclick="showTab('posted')">ჩემი განცხადებები</button>
+  </div>
+</div>
 
     <!-- TAB: RENTALS -->
     <div id="tab-rentals">
-      <div class="sec-title">
-        ნაქირავები მანქანები
-      </div>
-      <div class="rental-list" id="rental-list">
+      <div class="cars-grid" id="rental-list">
         <div class="skeleton"></div>
         <div class="skeleton"></div>
       </div>
@@ -77,27 +80,26 @@
 
     <!-- TAB: FAVORITES -->
     <div id="tab-favorites" style="display:none">
-      <div class="sec-title">
-        მოწონებული მანქანები
-      </div>
       <div class="cars-grid" id="fav-grid"></div>
     </div>
 
     <!-- TAB: POSTED -->
     <div id="tab-posted" style="display:none">
-      <div class="sec-title">
-        ჩემი განცხადებები
-      </div>
       <div class="cars-grid" id="posted-grid"></div>
     </div>
 
   </div>
 </div>
 
-<footer><span>RentCar</span> Georgia &copy; 2025</footer>
+<footer>
+  <div class="foot-logo">RentCar</div>
+  Georgia &copy; 2025
+</footer>
+
 <div class="toast" id="toast"></div>
 
 
 <script src="profile.js"></script>
+
 </body>
 </html>

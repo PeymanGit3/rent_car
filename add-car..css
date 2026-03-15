@@ -135,6 +135,7 @@ header{
 
 .page-title{
   font-family:var(--font-display);
+  color: yellow;
   font-size:2.5rem;
   font-weight:700;
   margin-bottom:6px;

@@ -13,7 +13,7 @@
   --border:#2a2d35;
 
   --gold: yellow;
-  --gold-dim:#8a6d2a;
+  --gold-dim:#FEE764;
 
   --text:#f0ede6;
   --muted:#7a7d87;
@@ -67,10 +67,12 @@ a{
 }
 
 .nav-logo{
-  font-family:'Cormorant Garamond',serif;
+  font-family:var(--font-display);
   font-size:1.6rem;
-  font-weight:800;
+  font-weight: 800;
   color:var(--gold);
+  letter-spacing:1px;
+  cursor:pointer;
 }
 
 .nav-logo span{
@@ -105,9 +107,7 @@ a{
   border-color:var(--border);
 }
 
-.nav-btn.active{
-  color:var(--gold);
-}
+
 
 .nav-btn.primary{
   background:var(--gold);
@@ -117,7 +117,7 @@ a{
 }
 
 .nav-btn.primary:hover{
-  background:#e8bc55;
+  background:#FEE764;
 }
 
 .nav-btn.icon-btn{
@@ -125,8 +125,17 @@ a{
   height:36px;
   padding:0;
   justify-content:center;
-  border:1px solid var(--border);
+   color:var(--gold);
   position:relative;
+}
+
+.nav-btn.icon-btn:hover{
+  border-color: var(--gold);
+}
+
+.gamo:hover{
+  border-color:var(--red);
+  color:var(--red);
 }
 
 .notif-dot{
@@ -179,7 +188,7 @@ a{
 }
 
 .filter-title{
-  font-family:'Cormorant Garamond',serif;
+  font-family:var(--font-display);
   font-size:1.3rem;
   font-weight:700;
   margin-bottom:20px;
@@ -272,7 +281,7 @@ a{
 }
 
 .btn-apply:hover{
-  background:#e8bc55;
+  background:#FEE764;
 }
 
 .btn-apply:active{
@@ -290,7 +299,7 @@ a{
 }
 
 .results-title{
-  font-family:'Cormorant Garamond',serif;
+  font-family:var(--font-display);
   font-size:1.6rem;
   font-weight:700;
 }
@@ -328,3 +337,141 @@ a{
   box-shadow:0 18px 45px rgba(0,0,0,.6);
   border-color:var(--gold-dim);
 }
+
+.card-body {
+  padding: 16px;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.tag {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 3px 10px;
+  font-size: .72rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.price-val {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.price-unit {
+  font-size: .78rem;
+  color: var(--muted);
+}
+
+.btn-detail {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: .78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .2s;
+}
+
+.btn-detail:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn-heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  background: rgba(14,15,17,.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1), background .2s;
+  z-index: 5;
+}
+
+.card-img-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-heart:hover { transform: scale(1.15); }
+.btn-heart:active { transform: scale(.88); }
+
+.btn-heart svg {
+  width: 15px;
+  height: 15px;
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+}
+
+.btn-heart:not(.liked) svg { fill: none; stroke: #aaa; stroke-width: 2; }
+.btn-heart.liked svg { fill: var(--red); stroke: var(--red); transform: scale(1.2); }
+
+.btn-hover-rent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,10,15,.55);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity .25s;
+  z-index: 3;
+}
+
+.btn-hover-rent span {
+  background: var(--gold);
+  color: #0e0f11;
+  font-weight: 700;
+  font-size: .92rem;
+  padding: 11px 26px;
+  border-radius: 50px;
+  transform: translateY(8px);
+  transition: transform .25s;
+  box-shadow: 0 4px 20px rgba(212,168,67,.4);
+}
+
+.btn-hover-rent span:hover {
+  transform:translateY(-5px);
+  box-shadow:0 20px 50px rgba(0,0,0,.6);
+  background-color:var(--gold-dim);
+}
+
+.card-img-wrap:hover .btn-hover-rent { opacity: 1; }
+.card-img-wrap:hover .btn-hover-rent span { transform: translateY(0); }

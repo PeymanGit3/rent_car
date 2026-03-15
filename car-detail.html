@@ -4,8 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RentCar — მანქანის დეტალები</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="car-detail..css">
+<link rel="stylesheet" href="index..css">
+
 </head>
 <body>
 
@@ -14,13 +22,6 @@
   <a href="index.html" class="nav-logo">Rent<span>Car</span></a>
   <div class="nav-links" id="nav-links"></div>
 </nav>
-
-<!-- BREADCRUMB -->
-<div class="breadcrumb">
-  <a href="index.html">მთავარი</a><span>/</span>
-  <a href="filter.html">ფილტრი</a><span>/</span>
-  <span class="cur" id="bc-name">იტვირთება...</span>
-</div>
 
 <!-- LOADING SKELETON -->
 <div class="detail-wrap" id="loading-wrap">
@@ -47,7 +48,6 @@
   <div style="font-size:3rem;margin-bottom:14px;">🔍</div>
   <h2>მანქანა ვერ მოიძებნა</h2>
   <p>შეიძლება განცხადება წაიშალა ან URL არასწორია</p>
-  <a href="filter.html" style="background:var(--gold);color:#0e0f11;padding:12px 28px;border-radius:50px;font-weight:700;font-size:.9rem;display:inline-block;margin-top:8px;">ყველა მანქანა →</a>
 </div>
 
 <!-- DETAIL CONTENT -->
@@ -68,7 +68,7 @@
     </div>
 
     <!-- Thumbnails -->
-    <div class="photo-thumbs">
+    <!-- <div class="photo-thumbs">
       <div class="thumb active" onclick="galTo(0)">
         <img src="audi_2.jpeg" alt="Fotoğraf 1">
       </div>
@@ -78,12 +78,14 @@
       <div class="thumb" onclick="galTo(2)">
         <img src="car2.png" alt="Fotoğraf 3">
       </div>
-    </div>
+    </div> -->
+
+    <div class="photo-thumbs" id="photo-thumbs">
+</div>
 
     <!-- Car title -->
     <div class="car-headline">
       <h1 id="car-title">—</h1>
-      <div class="car-loc">📍 <strong id="car-city">—</strong></div>
     </div>
 
     <!-- Info boxes -->
@@ -118,7 +120,7 @@
 
       <!-- BUY BUTTON -->
       <button class="btn-buy" id="btn-buy" onclick="doRent()">
-        🚗 ყიდვა
+        იქირავე
       </button>
 
       <!-- LOGIN HINT (not logged in) -->

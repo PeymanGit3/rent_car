@@ -9,12 +9,13 @@ try{
 
 /* ── GALLERY ── */
 // 📸 3 fotoğraf dizisi — isimleri buradan değiştir
-const galImages = ['audi_2.jpeg', 'car.png', 'car2.png'];
+const galImages = [];
 let galIdx = 0;
 
 function galTo(i){
   galIdx = i;
-  document.getElementById('main-img').src = galImages[galIdx];
+  const mainImg = document.getElementById('main-img');
+  if(mainImg) mainImg.src = galImages[galIdx];
   document.querySelectorAll('.thumb').forEach((t, idx) =>
     t.classList.toggle('active', idx === galIdx)
   );
@@ -30,12 +31,10 @@ function renderNav(){
   if(user && token){
     const i = (user.firstName || user.phoneNumber || '?')[0].toUpperCase();
     nav.innerHTML = `
-      <a href="filter.html" class="nav-btn">ფილტრი</a>
-      <a href="add-car.html" class="nav-btn primary">+ დამატება</a>
-      <a href="profile.html" class="nav-btn">
-        <span class="nav-avatar">${i}</span>${user.firstName || user.phoneNumber}
-      </a>
-      <button class="nav-btn danger" onclick="logout()">გამოსვლა</button>`;
+      <a href="add-car.html" class="nav-btn primary"><i class="fa-solid fa-plus"></i></a>
+      <button class="nav-btn icon-btn" onclick="openNotif()" title="შეტყობინებები"><i class="fa-solid fa-bell"></i><span class="notif-dot" id="ndot" style="display:none"></span></button>
+      <a href="profile.html" class="nav-btn" style="display:flex;align-items:center;gap:6px;border: 1px solid var(--gold)"><span class="nav-avatar">${i}</span>${user.firstName||user.phoneNumber}</a>
+      <button class="nav-btn gamo" onclick="logout()">გამოსვლა</button>`;
   } else {
     nav.innerHTML = `
       <a href="filter.html" class="nav-btn">ფილტრი</a>
@@ -121,7 +120,7 @@ const res = await fetch(`${API}/Purchase/purchase?${params}`, {
 
     if(res.ok){
       const price = car.dailyPrice ?? car.price ?? 0;
-      showToast('🚗', 'თქვენ წარმატებით იქირავეთ მანქანა', 'success');
+      showToast('თქვენ წარმატებით იქირავეთ მანქანა', 'success');
       
       // Save to local rented list for profile display
       try{
@@ -145,7 +144,7 @@ const res = await fetch(`${API}/Purchase/purchase?${params}`, {
     showToast('⚠️', 'სერვერთან კავშირი ვერ მოხდა', 'error');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '🚗 ყიდვა';
+    btn.innerHTML = 'იქირავე';
   }
 }
 
@@ -162,23 +161,49 @@ async function loadCar(){
 }
 
 function renderCar(c){
+  // Fotoğrafları API'den al
+  galImages.length = 0;
+  
+  if(c.imageUrl1) galImages.push(c.imageUrl1);
+  if(c.imageUrl2) galImages.push(c.imageUrl2);
+  if(c.imageUrl3) galImages.push(c.imageUrl3);
+  if(galImages.length === 0) galImages.push('car.png'); // fallback
+  galImages.length = 0;
+if(c.imageUrl1) galImages.push(c.imageUrl1);
+if(c.imageUrl2) galImages.push(c.imageUrl2);
+if(c.imageUrl3) galImages.push(c.imageUrl3);
+if(galImages.length === 0) galImages.push('car.png');
+
+// Thumbnails render
+const thumbsEl = document.getElementById('photo-thumbs');
+thumbsEl.innerHTML = '';
+galImages.forEach((src, i) => {
+  const div = document.createElement('div');
+  div.className = 'thumb' + (i === 0 ? ' active' : '');
+  div.onclick = () => galTo(i);
+  div.innerHTML = `<img src="${src}" alt="ფოტო ${i+1}">`;
+  thumbsEl.appendChild(div);
+});
+
+galTo(0);
+  galTo(0); // galeriye ilk fotoğrafı yükle
+  
+
   document.getElementById('loading-wrap').style.display = 'none';
   document.getElementById('detail-wrap').style.display  = 'grid';
 
   const name = `${c.brand || ''} ${c.model || ''}`.trim();
   document.title = `RentCar — ${name}`;
-  document.getElementById('bc-name').textContent   = name;
   document.getElementById('car-title').textContent = name || '—';
-  document.getElementById('car-city').textContent  = c.city || '—';
 
   // Info boxes
   const boxes = [
-    ['📅', 'წელი',       c.year           || '—'],
-    ['⚙️', 'ტრანსმისია', c.transmission   || '—'],
-    ['👥', 'ტევადობა',   c.capacity       ? `${c.capacity} კაცი` : '—'],
-    ['⛽', 'ბაკი',       c.fuelTankCapacity ? `${c.fuelTankCapacity} ლ` : '—'],
-    ['📍', 'ქალაქი',     c.city           || '—'],
-    ['💰', 'ფასი/დღე',   `${c.dailyPrice ?? c.price ?? '—'} ₾`],
+    ['<i class="fa-solid fa-calendar-days"></i>', 'წელი',       c.year           || '—'],
+    ['<i class="fa-solid fa-people-group"></i>', 'ტრანსმისია', c.transmission   || '—'],
+    ['<i class="fa-solid fa-people-group"></i>', 'ტევადობა',   c.capacity       ? `${c.capacity} კაცი` : '—'],
+    ['<i class="fa-solid fa-gas-pump"></i>', 'ბაკი',       c.fuelCapacity ? `${c.fuelCapacity} ლ` : '—'],
+    ['<i class="fa-solid fa-location-dot"></i>', 'ქალაქი',     c.city           || '—'],
+    ['<i class="fa-solid fa-user"></i>', 'განმცხადებელი', c.createdBy || '—'],
   ];
   document.getElementById('info-grid').innerHTML = boxes.map(([ic, l, v]) =>
     `<div class="ibox"><div class="ilbl">${l}</div><div class="ival">${ic} ${v}</div></div>`

@@ -20,8 +20,11 @@ if (!currentUser || !token) {
 
 /* ── PHOTO HANDLING ── */
 document.getElementById('f-photos')?.addEventListener('change', function () {
-  const files = Array.from(this.files).slice(0, 3);
-  selectedFiles = files;
+  const newFiles = Array.from(this.files);
+  newFiles.forEach(f => {
+    if (selectedFiles.length < 3) selectedFiles.push(f);
+  });
+  this.value = ''; // input'u sıfırla ki aynı dosyayı tekrar seçebilsin
   renderPreviews();
 });
 
@@ -69,64 +72,77 @@ async function submitCar() {
   const errBox = document.getElementById('err-box');
   errBox.style.display = 'none';
 
-  const brand    = document.getElementById('f-brand').value.trim();
-  const model    = document.getElementById('f-model').value.trim();
-  const year     = parseInt(document.getElementById('f-year').value);
-  const city     = document.getElementById('f-city').value.trim();
-  const trans    = document.getElementById('f-trans').value;
-  const cap      = parseInt(document.getElementById('f-cap').value);
-  const price    = parseFloat(document.getElementById('f-price').value);
-  const fuel     = parseFloat(document.getElementById('f-fuel').value);
-  const phone    = currentUser?.phoneNumber || '';
+  const brand = document.getElementById('f-brand').value.trim();
+  const model = document.getElementById('f-model').value.trim();
+  const year  = parseInt(document.getElementById('f-year').value);
+  const city  = document.getElementById('f-city').value.trim();
+  const trans = document.getElementById('f-trans').value;
+  const cap   = parseInt(document.getElementById('f-cap').value);
+  const price = parseFloat(document.getElementById('f-price').value);
+  const fuel  = parseFloat(document.getElementById('f-fuel').value);
+  const phone = currentUser?.phoneNumber || '';
 
-  if (!brand || !model || !year || !city || !trans || !cap || !price || !fuel) {
-    showErr('გთხოვთ შეავსოთ ყველა სავალდებულო ველი'); return;
-  }
-  if (selectedFiles.length === 0) {
-    showErr('გთხოვთ ატვირთოთ მინიმუმ 1 ფოტო'); return;
-  }
+const img1val = document.getElementById('f-img1').value.trim();
+if (!brand || !model || !year || !city || !trans || !cap || !price || !fuel) {
+  showErr('გთხოვთ შეავსოთ ყველა სავალდებულო ველი'); return;
+}
+if (!img1val) {
+  showErr('გთხოვთ შეიყვანოთ მინიმუმ 1 ფოტოს URL'); return;
+}
 
   const btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = 'ემატება...';
 
   try {
-    // Try multipart/form-data first
     const fd = new FormData();
-    fd.append('brand', brand);
-    fd.append('model', model);
-    fd.append('year', year);
-    fd.append('city', city);
-    fd.append('transmission', trans);
-    fd.append('capacity', cap);
-    fd.append('dailyPrice', price);
-    fd.append('fuelTankCapacity', fuel);
-    fd.append('phoneNumber', phone);
-    selectedFiles.forEach((f, i) => fd.append(`image${i + 1}`, f));
+    fd.append('Brand', brand);
+    fd.append('Model', model);
+    fd.append('Year', year);
+    fd.append('City', city);
+    fd.append('Transmission', trans);
+    fd.append('Capacity', cap);
+    fd.append('Price', price);
+    fd.append('FuelCapacity', fuel);
+    fd.append('CreatedBy', currentUser.firstName || phone);
+    fd.append('CreatedByEmail', currentUser.email || phone + '@rentcar.ge');
+    fd.append('Latitude', 0);
+    fd.append('Longitude', 0);
+fd.append('OwnerPhoneNumber', phone);
 
-    const r1 = await fetch(`${API}/api/Car`, {
+const img1 = document.getElementById('f-img1').value.trim();
+const img2 = document.getElementById('f-img2').value.trim();
+const img3 = document.getElementById('f-img3').value.trim();
+const urlToBlob = async (url) => {
+  try {
+    const r = await fetch(url);
+    const blob = await r.blob();
+    const ext = url.split('.').pop().split('?')[0] || 'jpg';
+    return new File([blob], `photo.${ext}`, { type: blob.type });
+  } catch { return null; }
+};
+
+if(img1){ const f = await urlToBlob(img1); if(f) fd.append('Image1', f); }
+if(img2){ const f = await urlToBlob(img2); if(f) fd.append('Image2', f); }
+if(img3){ const f = await urlToBlob(img3); if(f) fd.append('Image3', f); }
+
+    console.log('Sending to API...');
+    for (let [k, v] of fd.entries()) console.log(k, v);
+
+    const res = await fetch(`${API}/api/Car`, {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}` },
       body: fd
     });
 
-    if (r1.ok) { showSuccess(); return; }
+    console.log('Response status:', res.status);
+    const resText = await res.text();
+    console.log('Response body:', resText);
 
-    // Fallback: JSON (without photos)
-    const r2 = await fetch(`${API}/api/Car`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ brand, model, year, city, transmission: trans, capacity: cap, dailyPrice: price, fuelTankCapacity: fuel, phoneNumber: phone })
-    });
+   if (res.ok || res.status === 201) { showSuccess(); return; }
+    showErr('სერვერის შეცდომა: ' + resText);
 
-    if (r2.ok) { showSuccess(); }
-    else {
-      const errText = await r2.text();
-      showErr('სერვერის შეცდომა: ' + (errText || r2.status));
-    }
-  } catch (e) {
+  } catch(e) {
+    console.error(e);
     showErr('სერვერთან კავშირი ვერ მოხდა');
   } finally {
     btn.disabled = false; btn.textContent = 'განცხადების დამატება ➕';
@@ -143,3 +159,16 @@ function showErr(msg) {
   el.style.display = 'block';
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
+
+['f-img1','f-img2','f-img3'].forEach((id, i) => {
+  document.getElementById(id)?.addEventListener('input', function() {
+    const grid = document.getElementById('preview-grid');
+    const items = grid.children;
+    if(this.value.trim()) {
+      items[i].innerHTML = `<img src="${this.value.trim()}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" onerror="this.parentElement.innerHTML='📷'">`;
+    } else {
+      items[i].innerHTML = '📷';
+      items[i].className = 'prev-empty';
+    }
+  });
+});

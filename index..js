@@ -8,9 +8,9 @@ function renderNav(){
     const i=(user.firstName||user.phoneNumber||'?')[0].toUpperCase();
     nav.innerHTML=`
       <a href="add-car.html" class="nav-btn primary"><i class="fa-solid fa-plus"></i></a>
-      <button class="nav-btn icon-btn" onclick="openNotif()" title="შეტყობინებები">🔔<span class="notif-dot" id="ndot" style="display:none"></span></button>
+      <button class="nav-btn icon-btn" onclick="openNotif()" title="შეტყობინებები"><i class="fa-solid fa-bell"></i><span class="notif-dot" id="ndot" style="display:none"></span></button>
       <a href="profile.html" class="nav-btn" style="display:flex;align-items:center;gap:6px;border: 1px solid var(--gold)"><span class="nav-avatar">${i}</span>${user.firstName||user.phoneNumber}</a>
-      <button class="nav-btn" onclick="logout()">გამოსვლა</button>`;
+      <button class="nav-btn gamo" onclick="logout()">გამოსვლა</button>`;
   }else{
     nav.innerHTML=`
       <a href="filter.html" class="nav-btn">ფილტრი</a>
@@ -44,32 +44,34 @@ function buildCard(car){
   const div=document.createElement('div');
   div.className='car-card';div.setAttribute('data-cid',car.id);
   const liked=isFav(car.id);
-  const imgH=(car.imageUrls&&car.imageUrls[0])?`<img src="${car.imageUrls[0]}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=card-img-placeholder>🚗</div>'">`:'<div class="card-img-placeholder">🚗</div>';
+  const img = car.imageUrl1 || car.imageUrls?.[0] || null;
+  const imgH = img ? `<img src="${img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=card-img-placeholder></div>'">` : '<div class="card-img-placeholder"></div>';
   div.innerHTML=`
     <div class="card-img-wrap">
       ${imgH}
       <button class="btn-heart ${liked?'liked':''}" title="მოწონება"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
       <a href="car-detail.html?id=${car.id}" class="btn-hover-rent">
-  <span>🚗 იქირავე</span>
+  <span>იქირავე</span>
 </a>
-      ${car.city?`<div class="card-city-tag">📍 ${car.city}</div>`:''}
     </div>
     <div class="card-body">
       <div class="card-title">${car.brand||''} ${car.model||''}</div>
       <div class="card-tags">
-        ${car.year?`<span class="tag">📅 ${car.year}</span>`:''}
-        ${car.capacity?`<span class="tag">👥 ${car.capacity} კაცი</span>`:''}
-        ${car.transmission?`<span class="tag">⚙️ ${car.transmission}</span>`:''}
-        ${car.fuelTankCapacity?`<span class="tag">⛽ ${car.fuelTankCapacity}ლ</span>`:''}
-      </div>
+        ${car.year?`<span class="tag"><i class="fa-solid fa-calendar-days"></i> ${car.year}</span>`:''}
+        ${car.capacity?`<span class="tag"><i class="fa-solid fa-people-group"></i>
+ ${car.capacity} კაცი</span>`:''}
+        ${car.transmission?`<span class="tag"><i class="fa-solid fa-gears"></i>
+ ${car.transmission}</span>`:''}
+        ${(car.fuelCapacity||car.fuelTankCapacity)?`<span class="tag"><i class="fa-solid fa-gas-pump"></i>
+ ${car.fuelCapacity||car.fuelTankCapacity}ლ</span>`:''} 
+        </div>
       <div class="card-footer">
-        <div class="card-price"><span class="price-val">${car.dailyPrice||car.price||'—'}</span><span class="price-unit"> ₾/დღე</span></div>
-        <a href="car-detail.html?id=${car.id}" class="btn-detail">დეტალები →</a>
+        <div class="card-price"><span class="price-val">${car.dailyPrice||car.price||'—'}</span><span class="price-unit"> ₾/დღე</span>
+        </div>
+        ${car.createdBy?`<span class="tag"><i class="fa-solid fa-user"></i> ${car.createdBy}</span>`:''}
       </div>
     </div>`;
   div.querySelector('.btn-heart').addEventListener('click',e=>{e.stopPropagation();e.preventDefault();toggleFav(car,e.currentTarget);});
-  div.querySelector('.card-img-wrap').addEventListener('click',()=>location.href=`car-detail.html?id=${car.id}`);
-  div.querySelector('.card-title').addEventListener('click',()=>location.href=`car-detail.html?id=${car.id}`);
   return div;
 }
 
@@ -97,7 +99,7 @@ async function loadPopular(){
   const g=document.getElementById('popular-grid');
   try{
     // try dedicated popular endpoint
-    const r=await fetch(`${API}/api/Car/popular`);
+    const r=await fetch(`${API}/api/Car/popular`).catch(()=>({ok:false}));
     if(r.ok){
       const cars=await r.json();
       const list=Array.isArray(cars)?cars:(cars.items||cars.cars||cars.data||[]);
@@ -111,7 +113,7 @@ async function loadPopular(){
     // fallback: use all cars
     const all = await fetchAllCars();
     g.innerHTML='';
-    if(!all.length){g.innerHTML='<div class="empty-state"><div class="ei">🚗</div><p>მანქანები ვერ მოიძებნა</p></div>';return;}
+    if(!all.length){g.innerHTML='<div class="empty-state"><div class="ei"></div><p>მანქანები ვერ მოიძებნა</p></div>';return;}
     all.slice(0,6).forEach(c=>g.appendChild(buildCard(c)));
     try{document.getElementById('stat-cars').textContent=all.length+'+';}catch{}
   }catch{
@@ -122,12 +124,28 @@ async function loadPopular(){
     else g.innerHTML='<div class="empty-state"><div class="ei">⚠️</div><p>მონაცემები ვერ ჩაიტვირთა</p></div>';
   }
 }
+/*
+\\ Bu kodu yukarıdaki loadPopular fonksiyonunun yerine kullansak öncelikle popüler arabaları getirmeye çalışmayacak(önce popular endpointini denemeyecek). Dolayısıyla o kısım hiç boş olmayacak ve daha hızlı dolacak. O alanın bazen boş olması popular endpointinin boş array göndermesidir.
+
+async function loadPopular(){
+  const g=document.getElementById('popular-grid');
+  try{
+    const all = await fetchAllCars();
+    g.innerHTML='';
+    if(!all.length){g.innerHTML='<div class="empty-state"><div class="ei"></div><p>მანქანები ვერ მოიძებნა</p></div>';return;}
+    all.slice(0,6).forEach(c=>g.appendChild(buildCard(c)));
+    try{document.getElementById('stat-cars').textContent=all.length+'+';}catch{}
+  }catch{
+    g.innerHTML='<div class="empty-state"><div class="ei">⚠️</div><p>მონაცემები ვერ ჩაიტვირთა</p></div>';
+  }
+}
+*/
 
 async function loadRandom(){
   const g=document.getElementById('random-grid');
   try{
     const all = await fetchAllCars();
-    if(!all.length){g.innerHTML='<div class="empty-state"><div class="ei">🚗</div><p>მანქანები ვერ მოიძებნა</p></div>';return;}
+    if(!all.length){g.innerHTML='<div class="empty-state"><div class="ei"></div><p>მანქანები ვერ მოიძებნა</p></div>';return;}
     const shuffled=[...all].sort(()=>Math.random()-.5);
     g.innerHTML='';
     shuffled.slice(0,6).forEach(c=>g.appendChild(buildCard(c)));

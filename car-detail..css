@@ -14,16 +14,17 @@
   --card:#1b1b22;
   --border:#2a2a33;
 
-  --gold:#d4a843;
-  --gold-light:#f0c96a;
+  --gold: yellow;
+  --gold-light: #FFF165;
 
   --white:#f4f4f6;
   --muted:#8a8a95;
 
-  --radius:14px;
-
-  --font-display:'Cormorant Garamond',serif;
-  --font-body:'Outfit',sans-serif;
+  --radius:14px;  
+                                                                                                                                  
+  /* Updated fonts for RentCar detail page */
+  --font-display:  'Outfit', sans-serif;
+  --font-body: "Quicksand", sans-serif;
 }
 
 body{
@@ -60,8 +61,10 @@ a{
 
 .nav-logo{
   font-family:var(--font-display);
-  font-size:1.7rem;
+  font-size:1.6rem;
   color:var(--gold);
+  letter-spacing:1px;
+  cursor:pointer;
 }
 
 .nav-logo span{
@@ -74,27 +77,52 @@ a{
 }
 
 .nav-btn{
-  padding:7px 15px;
-  border-radius:40px;
-  border:1px solid var(--border);
-  font-size:.85rem;
+  background:none;
+  border:1px solid transparent;
   color:var(--muted);
-  transition:.2s;
+  padding:7px 15px;
+  border-radius:50px;
+  font-family:'Outfit',sans-serif;
+  font-size:.84rem;
+  font-weight:500;
+  cursor:pointer;
+  transition:all .2s;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
 }
 
 .nav-btn:hover{
-  border-color:var(--gold);
-  color:var(--gold);
+  color:var(--text);
+  border-color:var(--border);
 }
 
 .nav-btn.primary{
   background:var(--gold);
-  color:#000;
-  border:none;
+  color:#0e0f11;
+  font-weight:700;
+  border-color:var(--gold);
 }
 
 .nav-btn.primary:hover{
-  background:var(--gold-light);
+  background:#FEE764;
+}
+
+.gamo:hover{
+  border-color:var(--red);
+  color:var(--red);
+}
+
+.notif-dot{
+  position:absolute;
+  top:6px;
+  right:6px;
+  width:7px;
+  height:7px;
+  background:var(--red);
+  border-radius:50%;
+  border:1.5px solid var(--bg);
 }
 
 /* BREADCRUMB */
@@ -113,10 +141,6 @@ a{
 
 .breadcrumb a:hover{
   color:var(--gold);
-}
-
-.breadcrumb .cur{
-  color:var(--white);
 }
 
 /* MAIN LAYOUT */
@@ -230,29 +254,34 @@ a{
 
 /* INFO GRID */
 
-.info-grid{
-  margin-top:24px;
-
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
+.info-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
-.ibox{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:14px;
+.ibox {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 20px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.ilbl{
-  font-size:.65rem;
-  color:var(--muted);
+.ilbl {
+  font-size: .65rem;
+  color: var(--muted);
+  display: none;
 }
 
-.ival{
-  font-weight:600;
-  margin-top:3px;
+.ival {
+  font-size: .78rem;
+  color: var(--muted);
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
 }
 
 /* DETAIL CARD */
@@ -281,7 +310,7 @@ a{
 }
 
 .dc-price .big{
-  font-family:var(--font-display);
+  font-family: var(--font-display);
   font-size:2.8rem;
   color:var(--gold);
 }
@@ -408,7 +437,7 @@ footer{
 .foot-logo{
   font-family:var(--font-display);
   color:var(--gold);
-  font-size:1.4rem;
+  font-size:1rem;
 }
 
 .toast {
@@ -444,4 +473,10 @@ footer{
 
 .toast.error {
   border-color: #e05252;
+}
+
+input[type=range]{
+  width:100%;
+  margin:10px 0 16px;
+  accent-color: var(--gold);
 }

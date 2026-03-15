@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RentCar — ფილტრაცია</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="filter.css">
 </head>
 <body>
@@ -23,14 +24,14 @@
     </div>
 
     <div class="filter-group">
-      <label class="filter-label">📍 ქალაქი</label>
+      <label class="filter-label"><i class="fa-solid fa-location-dot"></i> ქალაქი</label>
       <select class="filter-select" id="f-city">
         <option value="">ყველა ქალაქი</option>
       </select>
     </div>
 
     <div class="filter-group">
-      <label class="filter-label">📅 გამოშვების წელი</label>
+      <label class="filter-label"><i class="fa-solid fa-calendar-days"></i> გამოშვების წელი</label>
       <div class="filter-range-row">
         <input type="number" class="filter-input" id="f-year-from" placeholder="1990" min="1950" max="2025">
         <span class="filter-range-sep">—</span>
@@ -39,11 +40,11 @@
     </div>
 
     <div class="filter-group">
-      <label class="filter-label">👥 ტევადობა (კაცი)</label>
+      <label class="filter-label"><i class="fa-solid fa-people-group"></i> ტევადობა (კაცი)</label>
       <input type="number" class="filter-input" id="f-capacity" placeholder="მაგ: 5" min="1" max="20">
     </div>
 
-    <button class="btn-apply" onclick="applyFilters()">🔍 ძიება</button>
+    <button class="btn-apply" onclick="applyFilters()">ძიება</button>
   </aside>
 
   <!-- RESULTS -->
