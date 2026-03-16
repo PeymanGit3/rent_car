@@ -153,7 +153,10 @@
     <div class="rent-success-icon">🎉</div>
     <div class="rent-success-title">წარმატებით იქირავეთ!</div>
     <div class="rent-success-msg">თქვენი ჯავშანი დადასტურებულია. გისურვებთ სასიამოვნო მგზავრობას!</div>
-    <button class="rent-success-btn" onclick="document.getElementById('rent-success-ov').classList.remove('show')">დახურვა</button>
+<div style="display:flex;gap:12px;justify-content:center;">
+  <button class="rent-success-btn-ghost" onclick="document.getElementById('rent-success-ov').classList.remove('show')">გაუქმნა</button>
+  <button class="rent-success-btn" onclick="window.location.href='profile.html'">პროფილი →</button>
+</div>
   </div>
 </div>
 

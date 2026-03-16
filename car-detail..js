@@ -152,7 +152,7 @@ const res = await fetch(`${API}/Purchase/purchase?${params}`, {
 
     if(res.ok){
       const price = car.dailyPrice ?? car.price ?? 0;
-      showToast('თქვენ წარმატებით იქირავეთ მანქანა', 'success');
+      document.getElementById('rent-success-ov').classList.add('show');
       
       // Save to local rented list for profile display
       try{

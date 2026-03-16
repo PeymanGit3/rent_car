@@ -556,3 +556,20 @@ input[type=range]{
   background: var(--gold-light);
   transform: translateY(-2px);
 }
+
+.rent-success-btn-ghost {
+  padding: 12px 32px;
+  border-radius: 50px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: .9rem;
+  cursor: pointer;
+  transition: all .25s;
+}
+
+.rent-success-btn-ghost:hover {
+  border-color: red;
+  color: red;
+}
