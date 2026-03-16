@@ -1,4 +1,4 @@
-const API = 'https://rentcar.stepprojects.ge';
+// const API = 'https://rentcar.stepprojects.ge';
 
 function getNavSession() {
   let token = null, user = null;
