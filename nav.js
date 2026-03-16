@@ -47,7 +47,7 @@ function renderNav() {
       <button class="nav-btn gamo" onclick="logout()">გამოსვლა</button>`;
 
     if (burger) burger.style.display = 'flex';
-    if (avatarWrap) avatarWrap.style.display = 'flex';
+    if (avatarWrap) avatarWrap.style.display = 'none';
     if (avatarMobile) avatarMobile.textContent = i;
 
     if (menuTop) menuTop.innerHTML = `

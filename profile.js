@@ -9,30 +9,6 @@ function loadSession() {
   } catch { token = null; currentUser = null; }
 }
 
-/* ── NAVBAR ── */
-// function renderNav() {
-//   const nav = document.getElementById('nav-links');
-//   if (!nav) return;
-//   if (currentUser && token) {
-//     const i = ((currentUser.firstName || '?')[0] + (currentUser.lastName || '')[0] || '').toUpperCase();
-//     nav.innerHTML = `
-//       <a href="add-car.html" class="nav-btn primary"><i class="fa-solid fa-plus"></i></a>
-//       <a href="notifications.html" class="nav-btn icon-btn" style="position:relative" title="შეტყობინებები">
-//         <i class="fa-solid fa-bell"></i>
-//         <span class="notif-badge" id="notif-badge" style="display:none">0</span>
-//       </a>
-//       <a href="profile.html" class="nav-btn" style="display:flex;align-items:center;gap:6px;border:1px solid var(--gold)">
-//         <span class="nav-avatar">${i}</span>${currentUser.firstName||currentUser.phoneNumber}
-//       </a>
-//       <button class="nav-btn gamo" onclick="logout()">გამოსვლა</button>`;
-//     loadNotifCount();
-//   } else {
-//     nav.innerHTML = `
-//       <a href="filter.html" class="nav-btn">ფილტრი</a>
-//       <a href="login.html" class="nav-btn primary">შესვლა</a>`;
-//   }
-// }
-
 async function loadNotifCount() {
   const badge = document.getElementById('notif-badge');
   if (!badge || !currentUser?.phoneNumber || !token) return;
@@ -429,13 +405,6 @@ filteredList.forEach(c => grid.appendChild(buildCard(c, true)));
   }
 }
 
-/* ── AUTH ── */
-// function logout() {
-//   localStorage.removeItem('rc_token');
-//   localStorage.removeItem('rc_user');
-//   window.location.href = 'index.html';
-// }
-
 /* ── TOAST ── */
 function showToast(msg, type = '') {
   const t = document.getElementById('toast');
@@ -448,7 +417,6 @@ function showToast(msg, type = '') {
 
 /* ── INIT ── */
 loadSession();
-// renderNav();
 
 if (!currentUser || !token) {
   document.getElementById('not-logged').style.display = 'block';
