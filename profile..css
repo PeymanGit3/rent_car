@@ -6,6 +6,13 @@
   padding:0;
 }
 
+@font-face {
+  font-family: 'Outfit-Regular';
+  src: url('fonts/Outfit-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root{
   --bg:#0a0a0f;
   --surface:#13131a;
@@ -23,8 +30,8 @@
 
   --radius:14px;
 
-  --font-display:  'Outfit', sans-serif;
-  --font-body: "Quicksand", sans-serif;
+  --font-display:'Outfit-Regular';
+  --font-body:'Outfit-Regular';
 }
 
 body{

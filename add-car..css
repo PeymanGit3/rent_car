@@ -6,6 +6,13 @@
   padding: 0;
 }
 
+@font-face {
+  font-family: 'Outfit-Regular';
+  src: url('fonts/Outfit-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --bg: #0a0a0f;
   --surface: #13131a;
@@ -19,8 +26,8 @@
   --green: #2ec47a;
   --radius: 14px;
 
-  --font-display: 'Cormorant Garamond', serif;
-  --font-body: 'Outfit', sans-serif;
+  --font-display:'Outfit-Regular';
+  --font-body:'Outfit-Regular';
 }
 
 body {

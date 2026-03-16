@@ -200,7 +200,7 @@ function renderCar(c){
   if(c.imageUrl2) galImages.push(c.imageUrl2);
   if(c.imageUrl3) galImages.push(c.imageUrl3);
   if(galImages.length === 0) galImages.push('car.png'); // fallback
-  galImages.length = 0;
+  
 
 // Thumbnails render
 const thumbsEl = document.getElementById('photo-thumbs');

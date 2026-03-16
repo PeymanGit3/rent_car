@@ -6,6 +6,13 @@
   padding:0;
 }
 
+@font-face {
+  font-family: 'Outfit-Regular';
+  src: url('fonts/Outfit-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root{
   --bg:#0e0f11;
   --surface:#16181c;
@@ -21,6 +28,9 @@
   --green:#4caf7d;
 
   --radius:14px;
+
+    --font-display:'Outfit-Regular';
+  --font-body:'Outfit-Regular';
 }
 
 body{
@@ -316,6 +326,28 @@ a{
   border-color:var(--red);
 }
 
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 12px 20px;
+    gap: 8px;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+    padding-bottom: 8px;
+  }
+}
 
 /* MOBILE */
 
@@ -326,3 +358,4 @@ a{
   }
 
 }
+
