@@ -7,13 +7,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="filter.css">
+<link rel="stylesheet" href="nav.css">
 </head>
 <body>
 
 <nav class="navbar">
   <a href="index.html" class="nav-logo">Rent<span>Car</span></a>
   <div class="nav-links" id="nav-links"></div>
+  <div class="nav-avatar-mobile-wrap" id="nav-avatar-mobile-wrap" style="display:none">
+    <span class="nav-avatar-mobile" id="nav-avatar-mobile"></span>
+  </div>
+  <button class="burger" id="burger" onclick="toggleBurger()" style="display:none">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-top" id="mobile-menu-top"></div>
+  <div class="mobile-menu-bottom">
+    <button class="mobile-nav-btn logout" onclick="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i> გამოსვლა
+    </button>
+  </div>
+</div>
 
 <div class="page-layout">
   <!-- FILTER PANEL -->
