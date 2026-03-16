@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentCar — შეტყობინებები</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="notifications.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Rent<span>Car</span></a>
+  <div class="nav-links" id="nav-links"></div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+<h1 class="page-title"><span><i class="fa-solid fa-bell"></i></span> <span class="notif-count-badge" id="notif-count">0</span></h1>  
+</div>
+
+  <div id="notif-list">
+    <div class="skeleton" style="height:80px;border-radius:14px;margin-bottom:12px;"></div>
+    <div class="skeleton" style="height:80px;border-radius:14px;margin-bottom:12px;"></div>
+    <div class="skeleton" style="height:80px;border-radius:14px;"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-logo">RentCar</div>
+  Georgia &copy; 2025
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="notifications.js"></script>
+</body>
+</html>

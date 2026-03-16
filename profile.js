@@ -14,12 +14,18 @@ function renderNav() {
   const nav = document.getElementById('nav-links');
   if (!nav) return;
   if (currentUser && token) {
-    const i = ((currentUser.firstName || '?')[0]+(currentUser.lastName || '')[0] || '').toUpperCase();
+    const i = ((currentUser.firstName || '?')[0] + (currentUser.lastName || '')[0] || '').toUpperCase();
     nav.innerHTML = `
       <a href="add-car.html" class="nav-btn primary"><i class="fa-solid fa-plus"></i></a>
-      <button class="nav-btn icon-btn" onclick="openNotif()" title="შეტყობინებები"><i class="fa-solid fa-bell"></i><span class="notif-dot" id="ndot" style="display:none"></span></button>
-      <a href="profile.html" class="nav-btn" style="display:flex;align-items:center;gap:6px;border: 1px solid var(--gold)"><span class="nav-avatar">${i}</span>${currentUser.firstName||currentUser.phoneNumber}</a>
+      <a href="notifications.html" class="nav-btn icon-btn" style="position:relative" title="შეტყობინებები">
+        <i class="fa-solid fa-bell"></i>
+        <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+      </a>
+      <a href="profile.html" class="nav-btn" style="display:flex;align-items:center;gap:6px;border:1px solid var(--gold)">
+        <span class="nav-avatar">${i}</span>${currentUser.firstName||currentUser.phoneNumber}
+      </a>
       <button class="nav-btn gamo" onclick="logout()">გამოსვლა</button>`;
+    loadNotifCount();
   } else {
     nav.innerHTML = `
       <a href="filter.html" class="nav-btn">ფილტრი</a>
@@ -27,16 +33,24 @@ function renderNav() {
   }
 }
 
-function openNotif() {
-  if (!currentUser || !token) return;
+async function loadNotifCount() {
+  const badge = document.getElementById('notif-badge');
+  if (!badge || !currentUser?.phoneNumber || !token) return;
   try {
-    fetch(`${API}/Message/Messages`, { headers: { 'Authorization': `Bearer ${token}` } })
-      .then(r => r.ok ? r.json() : null)
-      .then(m => showToast(m && m.length ? `🔔 ${m.length} შეტყობინება` : 'შეტყობინებები არ არის', ''))
-      .catch(() => showToast('შეტყობინებები ვერ ჩაიტვირთა', 'error'));
-  } catch {
-    showToast('შეტყობინებები ვერ ჩაიტვირთა', 'error');
-  }
+    const res = await fetch(`${API}/Message/Messages?phoneNumber=${encodeURIComponent(currentUser.phoneNumber)}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) return;
+    const msgs = await res.json();
+    const count = Array.isArray(msgs) ? msgs.length : 0;
+    const readCount = parseInt(localStorage.getItem(`rc_notif_read_count_${currentUser.phoneNumber}`) || '0');
+    if (count > readCount) {
+      badge.textContent = count - readCount;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch {}
 }
 
 /* ── TABS ── */
@@ -106,24 +120,24 @@ function checkFavEmpty() {
 }
 
 /* ── BUILD CARD ── */
-function buildCard(car, isPosted = false) {
+function buildCard(car, isPosted = false, isFavCard = false) {
   const liked = isFav(car.id);
   const img = car.imageUrl1 || car.imageUrls?.[0] || null;
   const d = document.createElement('div');
   d.className = 'car-card';
   d.innerHTML = `
-    <div class="car-img-wrap">
-      ${img
-        ? `<img src="${img}" alt="${car.brand||''}" loading="lazy" onerror="this.closest('.car-img-wrap').innerHTML='<div class=car-img-ph>
-          </div>'">`
-        : '<div class="car-img-ph"><i class="fa-solid fa-image"></i></div>'}
-        <button class="btn-heart ${liked ? 'liked' : ''}" data-id="${car.id}">
-        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      </button>
-      <a href="car-detail.html?id=${car.id}" class="btn-hover-rent">
-        <span>იქირავე</span>
-      </a>
-    </div>
+<div class="car-img-wrap">
+  ${img
+    ? `<img src="${img}" alt="${car.brand||''}" loading="lazy" onerror="this.closest('.car-img-wrap').innerHTML='<div class=car-img-ph><i class=fa-solid fa-image></i></div>'">`
+    : '<div class="car-img-ph"><i class="fa-solid fa-image"></i></div>'}
+  <button class="btn-heart ${liked ? 'liked' : ''}" data-id="${car.id}">
+    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  </button>
+  ${isPosted
+    ? `<button class="btn-remove-rental-card" onclick="deletePostedCar(${car.id}, this)"><span>🗑 წაშლა</span></button>`
+    : `<a href="car-detail.html?id=${car.id}" class="btn-hover-rent"><span>იქირავე</span></a>`
+  }
+</div>
     <div class="car-body">
       <div class="car-name">${car.brand||''} ${car.model||''}</div>
       <div class="car-tags">
@@ -137,17 +151,39 @@ function buildCard(car, isPosted = false) {
           <span class="price-num">${car.dailyPrice ?? car.price ?? '—'}</span>
           <span class="price-unit"> ₾/დღე</span>
         </div>
-        ${isPosted
-          ? `<button class="btn-remove-rental" onclick="deletePostedCar(${car.id}, this)">🗑</button>`
-          : `${car.createdBy ? `<span class="tag"><i class="fa-solid fa-user"></i> ${car.createdBy}</span>` : ''}`
-        }
+      
+        ${car.createdBy ? `<span class="tag"><i class="fa-solid fa-user"></i> ${car.createdBy}</span>` : ''}
+        
       </div>
     </div>
   `;
-  d.querySelector('.btn-heart').addEventListener('click', e => {
-    e.stopPropagation();
-    toggleFav(car, e.currentTarget, d);
-  });
+d.querySelector('.btn-heart').addEventListener('click', e => {
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  const favs = getFavs();
+  const idx = favs.findIndex(f => (f.id ?? f) === car.id);
+  if (idx === -1) {
+    favs.push(car);
+    btn.classList.add('liked');
+    showToast('❤️ მოწონებულებში დაემატა', 'success');
+  } else {
+    favs.splice(idx, 1);
+    btn.classList.remove('liked');
+    if (isFavCard) {
+      d.style.transition = 'opacity .3s, transform .3s';
+      d.style.opacity = '0';
+      d.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        d.remove();
+        checkFavEmpty();
+        updateFavCount();
+      }, 300);
+    }
+    showToast('🤍 ამოიშალა მოწონებულებიდან', '');
+  }
+  saveFavs(favs);
+  updateFavCount();
+});
   return d;
 }
 
@@ -161,7 +197,7 @@ function renderFavorites() {
     return;
   }
   grid.innerHTML = '';
-  favs.forEach(car => grid.appendChild(buildCard(car)));
+favs.forEach(car => grid.appendChild(buildCard(car, false, true)));
 }
 
 /* ── LOAD RENTALS ── */
@@ -335,31 +371,22 @@ setTimeout(() => {
   showToast('🗑 წაიშალა', '');
 }
 
-async function deletePostedCar(carId, btn) {
-  if (!confirm('დარწმუნებული ხართ წაშლაში?')) return;
-  try {
-    const res = await fetch(`${API}/api/Car/${carId}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if (res.ok) {
-      const card = btn.closest('.car-card');
-      card.style.transition = 'opacity .3s, transform .3s';
-      card.style.opacity = '0';
-      card.style.transform = 'scale(0.9)';
-      setTimeout(() => {
-        card.remove();
-        const remaining = document.querySelectorAll('#posted-grid .car-card').length;
-        document.getElementById('stat-posted').textContent = remaining;
-        document.getElementById('posted-count').textContent = remaining;
-      }, 300);
-      showToast('🗑 განცხადება წაიშალა', '');
-    } else {
-      showToast('⚠️ წაშლა ვერ მოხდა', 'error');
-    }
-  } catch {
-    showToast('⚠️ სერვერთან კავშირი ვერ მოხდა', 'error');
-  }
+function deletePostedCar(carId, btn) {
+  const hiddenKey = `rc_hidden_posted_${currentUser.phoneNumber}`;
+  const hidden = JSON.parse(localStorage.getItem(hiddenKey) || '[]');
+  hidden.push(String(carId));
+  localStorage.setItem(hiddenKey, JSON.stringify(hidden));
+
+  const card = btn.closest('.car-card');
+  card.style.transition = 'opacity .3s, transform .3s';
+  card.style.opacity = '0';
+  card.style.transform = 'scale(0.9)';
+  setTimeout(() => {
+    card.remove();
+    const remaining = document.querySelectorAll('#posted-grid .car-card').length;
+    document.getElementById('stat-posted').textContent = remaining;
+  }, 300);
+  showToast('🗑 განცხადება წაიშალა', '');
 }
 
 /* ── LOAD POSTED CARS ── */
@@ -389,8 +416,14 @@ async function loadPostedCars() {
         </div>`;
       return;
     }
-    grid.innerHTML = '';
-      list.forEach(c => grid.appendChild(buildCard(c, true)));
+const hiddenKey = `rc_hidden_posted_${currentUser.phoneNumber}`;
+const hidden = JSON.parse(localStorage.getItem(hiddenKey) || '[]');
+const filteredList = list.filter(c => !hidden.includes(String(c.id)));
+
+document.getElementById('stat-posted').textContent = filteredList.length;
+
+grid.innerHTML = '';
+filteredList.forEach(c => grid.appendChild(buildCard(c, true)));
   } catch {
     document.getElementById('posted-grid').innerHTML = `<div class="empty-block"><div class="empty-icon">⚠️</div><p>ვერ ჩაიტვირთა</p></div>`;
   }

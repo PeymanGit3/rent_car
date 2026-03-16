@@ -2,13 +2,13 @@ const API = 'https://rentcar.stepprojects.ge';
 let token = null, currentUser = null;
 let selectedFiles = [];
 
-/* ── SESSION ── */
 try {
   token = localStorage.getItem('rc_token');
   currentUser = JSON.parse(localStorage.getItem('rc_user') || 'null');
 } catch {}
 
-/* ── INIT ── */
+renderNav()
+
 if (!currentUser || !token) {
   document.getElementById('not-auth').style.display = 'block';
 } else {
@@ -18,17 +18,43 @@ if (!currentUser || !token) {
   document.getElementById('owner-phone-show').textContent = phone || '—';
 }
 
-/* ── PHOTO HANDLING ── */
+function renderNav() {
+  const nav = document.getElementById('nav-links');
+  if (!nav) return;
+  if (currentUser && token) {
+    const i = ((currentUser.firstName || '?')[0] + (currentUser.lastName || '')[0] || '').toUpperCase();
+    nav.innerHTML = `
+      <a href="add-car.html" class="nav-btn primary"><i class="fa-solid fa-plus"></i></a>
+      <a href="notifications.html" class="nav-btn icon-btn" style="position:relative" title="შეტყობინებები">
+        <i class="fa-solid fa-bell"></i>
+        <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+      </a>
+      <a href="profile.html" class="nav-btn" style="display:flex;align-items:center;gap:6px;border:1px solid var(--gold)">
+        <span class="nav-avatar">${i}</span>${currentUser.firstName || currentUser.phoneNumber}
+      </a>
+      <button class="nav-btn gamo" onclick="logout()">გამოსვლა</button>`;
+  } else {
+    nav.innerHTML = `
+      <a href="filter.html" class="nav-btn">ფილტრი</a>
+      <a href="login.html" class="nav-btn primary">შესვლა</a>`;
+  }
+}
+
+function logout() {
+  localStorage.removeItem('rc_token');
+  localStorage.removeItem('rc_user');
+  window.location.href = 'index.html';
+}
+
 document.getElementById('f-photos')?.addEventListener('change', function () {
   const newFiles = Array.from(this.files);
   newFiles.forEach(f => {
     if (selectedFiles.length < 3) selectedFiles.push(f);
   });
-  this.value = ''; // input'u sıfırla ki aynı dosyayı tekrar seçebilsin
+  this.value = '';
   renderPreviews();
 });
 
-// Drag & drop
 const zone = document.getElementById('upload-zone');
 if (zone) {
   zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
@@ -67,7 +93,6 @@ function renderPreviews() {
   }
 }
 
-/* ── SUBMIT ── */
 async function submitCar() {
   const errBox = document.getElementById('err-box');
   errBox.style.display = 'none';
@@ -82,13 +107,9 @@ async function submitCar() {
   const fuel  = parseFloat(document.getElementById('f-fuel').value);
   const phone = currentUser?.phoneNumber || '';
 
-const img1val = document.getElementById('f-img1').value.trim();
-if (!brand || !model || !year || !city || !trans || !cap || !price || !fuel) {
-  showErr('გთხოვთ შეავსოთ ყველა სავალდებულო ველი'); return;
-}
-if (!img1val) {
-  showErr('გთხოვთ შეიყვანოთ მინიმუმ 1 ფოტოს URL'); return;
-}
+  if (!brand || !model || !year || !city || !trans || !cap || !price || !fuel) {
+    showErr('გთხოვთ შეავსოთ ყველა სავალდებულო ველი'); return;
+  }
 
   const btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = 'ემატება...';
@@ -103,30 +124,11 @@ if (!img1val) {
     fd.append('Capacity', cap);
     fd.append('Price', price);
     fd.append('FuelCapacity', fuel);
-    fd.append('CreatedBy', currentUser.firstName || phone);
+    fd.append('CreatedBy', phone);
     fd.append('CreatedByEmail', currentUser.email || phone + '@rentcar.ge');
     fd.append('Latitude', 0);
     fd.append('Longitude', 0);
-fd.append('OwnerPhoneNumber', phone);
-
-const img1 = document.getElementById('f-img1').value.trim();
-const img2 = document.getElementById('f-img2').value.trim();
-const img3 = document.getElementById('f-img3').value.trim();
-const urlToBlob = async (url) => {
-  try {
-    const r = await fetch(url);
-    const blob = await r.blob();
-    const ext = url.split('.').pop().split('?')[0] || 'jpg';
-    return new File([blob], `photo.${ext}`, { type: blob.type });
-  } catch { return null; }
-};
-
-if(img1){ const f = await urlToBlob(img1); if(f) fd.append('Image1', f); }
-if(img2){ const f = await urlToBlob(img2); if(f) fd.append('Image2', f); }
-if(img3){ const f = await urlToBlob(img3); if(f) fd.append('Image3', f); }
-
-    console.log('Sending to API...');
-    for (let [k, v] of fd.entries()) console.log(k, v);
+    fd.append('OwnerPhoneNumber', phone);
 
     const res = await fetch(`${API}/api/Car`, {
       method: 'POST',
@@ -134,18 +136,15 @@ if(img3){ const f = await urlToBlob(img3); if(f) fd.append('Image3', f); }
       body: fd
     });
 
-    console.log('Response status:', res.status);
+    if (res.ok || res.status === 201) { showSuccess(); return; }
     const resText = await res.text();
-    console.log('Response body:', resText);
-
-   if (res.ok || res.status === 201) { showSuccess(); return; }
     showErr('სერვერის შეცდომა: ' + resText);
 
   } catch(e) {
     console.error(e);
     showErr('სერვერთან კავშირი ვერ მოხდა');
   } finally {
-    btn.disabled = false; btn.textContent = 'განცხადების დამატება ➕';
+    btn.disabled = false; btn.innerHTML = 'განცხადების დამატება <i class="fa-solid fa-plus"></i>';
   }
 }
 
@@ -160,15 +159,12 @@ function showErr(msg) {
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-['f-img1','f-img2','f-img3'].forEach((id, i) => {
-  document.getElementById(id)?.addEventListener('input', function() {
-    const grid = document.getElementById('preview-grid');
-    const items = grid.children;
-    if(this.value.trim()) {
-      items[i].innerHTML = `<img src="${this.value.trim()}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" onerror="this.parentElement.innerHTML='📷'">`;
-    } else {
-      items[i].innerHTML = '📷';
-      items[i].className = 'prev-empty';
-    }
-  });
-});
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+}

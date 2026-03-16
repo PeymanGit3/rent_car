@@ -6,18 +6,23 @@ let allCars=[];
 function renderNav(){
   const nav=document.getElementById('nav-links');
   if(user&&token){
-    const i=(user.firstName||user.phoneNumber||'?')[0].toUpperCase();
+    const i=((user.firstName||'?')[0]+(user.lastName||'')[0]||'').toUpperCase();
     nav.innerHTML=`
       <a href="add-car.html" class="nav-btn primary"><i class="fa-solid fa-plus"></i></a>
-      <button class="nav-btn icon-btn" onclick="openNotif()" title="შეტყობინებები"><i class="fa-solid fa-bell"></i><span class="notif-dot" id="ndot" style="display:none"></span></button>
-      <a href="profile.html" class="nav-btn" style="display:flex;align-items:center;gap:6px;border: 1px solid var(--gold)"><span class="nav-avatar">${i}</span>${user.firstName||user.phoneNumber}</a>
+      <a href="notifications.html" class="nav-btn icon-btn" style="position:relative" title="შეტყობინებები">
+        <i class="fa-solid fa-bell"></i>
+        <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+      </a>
+      <a href="profile.html" class="nav-btn" style="display:flex;align-items:center;gap:6px;border:1px solid var(--gold)"><span class="nav-avatar">${i}</span>${user.firstName||user.phoneNumber}</a>
       <button class="nav-btn gamo" onclick="logout()">გამოსვლა</button>`;
+    loadNotifCount();
   }else{
     nav.innerHTML=`
       <a href="filter.html" class="nav-btn active">ფილტრი</a>
       <a href="login.html" class="nav-btn primary">შესვლა</a>`;
   }
 }
+
 function logout(){localStorage.removeItem('rc_token');localStorage.removeItem('rc_user');window.location.href='index.html';}
 
 function favKey(){return user?`rc_favs_${user.phoneNumber}`:'rc_favs_guest';}
@@ -148,9 +153,25 @@ async function init(){
   document.getElementById('results-grid').innerHTML='<div class="empty-state"><div class="ei">⚠️</div><p>მონაცემები ვერ ჩაიტვირთა</p></div>';
 }
 
-async function openNotif(){
-  if(!user||!token)return;
-  try{const r=await fetch(`${API}/Message/Messages`,{headers:{'Authorization':`Bearer ${token}`}});if(r.ok){const m=await r.json();showToast(m&&m.length?`🔔 ${m.length} შეტყობინება`:'შეტყობინებები არ არის','');}}catch{}
+async function loadNotifCount(){
+  const badge=document.getElementById('notif-badge');
+  if(!badge||!user?.phoneNumber||!token) return;
+  try{
+    const res=await fetch(`${API}/Message/Messages?phoneNumber=${encodeURIComponent(user.phoneNumber)}`,{headers:{'Authorization':`Bearer ${token}`}});
+    if(!res.ok) return;
+    const msgs=await res.json();
+    const count=Array.isArray(msgs)?msgs.length:0;
+    const hiddenKey=`rc_hidden_msgs_${user.phoneNumber}`;
+    const hidden=JSON.parse(localStorage.getItem(hiddenKey)||'[]');
+    const visible=msgs.filter(m=>!hidden.includes(m)).length;
+    const readCount=parseInt(localStorage.getItem(`rc_notif_read_count_${user.phoneNumber}`)||'0');
+    if(visible>0&&visible>readCount){
+      badge.textContent=visible;
+      badge.style.display='flex';
+    }else{
+      badge.style.display='none';
+    }
+  }catch{}
 }
 
 function showToast(msg,type=''){

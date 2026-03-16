@@ -5,20 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RentCar — მანქანის დამატება</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="add-car..css">
-
 </head>
 <body>
 
-<header>
-  <div class="nav-inner">
-    <a href="index.html" class="logo">Rent<em>Car</em></a>
-    <div class="nav-right">
-      <a href="index.html" class="nav-btn">← მთავარი</a>
-      <a href="profile.html" class="nav-btn">პროფილი</a>
-    </div>
-  </div>
-</header>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Rent<span>Car</span></a>
+  <div class="nav-links" id="nav-links"></div>
+</nav>
 
 <div class="page">
 
@@ -90,7 +85,7 @@
       <div class="field full">
         <label>ტელ. ნომერი</label>
         <div class="phone-box">
-          <span style="font-size:1.1rem;">📱</span>
+          <span style="font-size:1.1rem;"><i class="fa-solid fa-mobile-button"></i></span>
           <div>
             <div class="pnum" id="owner-phone-show">—</div>
             <div class="plbl">ავტომატურად ავსებს თქვენი ანგარიშიდან</div>
@@ -99,32 +94,11 @@
         <input type="hidden" id="f-phone">
       </div>
 
-      <!-- PHOTOS -->
-<!-- PHOTOS -->
-<div class="sdiv"><span>✦ ფოტოები</span><hr></div>
-<div class="field full">
-  <label>ფოტო 1 — URL <span class="req">*</span></label>
-  <input type="text" id="f-img1" placeholder="https://example.com/car1.jpg">
-</div>
-<div class="field full">
-  <label>ფოტო 2 — URL</label>
-  <input type="text" id="f-img2" placeholder="https://example.com/car2.jpg">
-</div>
-<div class="field full">
-  <label>ფოტო 3 — URL</label>
-  <input type="text" id="f-img3" placeholder="https://example.com/car3.jpg">
-</div>
-<div class="preview-grid" id="preview-grid">
-  <div class="prev-empty">📷</div>
-  <div class="prev-empty">📷</div>
-  <div class="prev-empty">📷</div>
-</div>
-
       <!-- FOOTER -->
       <div class="form-footer">
         <button class="btn-cancel" onclick="window.location.href='index.html'">გაუქმება</button>
         <button class="btn-submit" id="btn-submit" onclick="submitCar()">
-          განცხადების დამატება ➕
+          განცხადების დამატება <i class="fa-solid fa-plus"></i>
         </button>
       </div>
     </div>
@@ -138,14 +112,20 @@
     <div class="success-title">დაემატა!</div>
     <div class="success-msg">თქვენი მანქანის განცხადება წარმატებით განთავსდა. სხვა მომხმარებლები მალე დაინახავენ.</div>
     <div>
-      <button class="btn-go" onclick="window.location.href='index.html'">მთავარი →</button>
-      <button class="btn-go-ghost" onclick="window.location.href='profile.html'">პროფილი</button>
+<button class="btn-go-ghost" onclick="document.getElementById('success-ov').classList.remove('show')">გაუქმნა</button>
+<button class="btn-go" onclick="window.location.href='profile.html'">პროფილი →</button>
     </div>
   </div>
 </div>
 
-<footer><span>RentCar</span> Georgia &copy; 2025</footer>
+<footer>
+  <div class="foot-logo">RentCar</div>
+  Georgia &copy; 2025
+</footer>
+
+<div class="toast" id="toast"></div>
 
 <script src="add-car.js"></script>
+
 </body>
 </html>
